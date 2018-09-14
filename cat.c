@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
 		fseek(file, 0, SEEK_SET);
 		char *buff = malloc(fsize+1);
 		fread(buff, fsize, 1, file);
+		free(buff);
 		fclose(file);
 		printf("%s", buff);
 	}

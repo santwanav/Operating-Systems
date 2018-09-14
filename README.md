@@ -1,2 +1,5 @@
 # Operating-Systems
-This repository contains implementation of various Linux Utilities.
+This repository contains my implementation of various Linux Utilities.
+
+## Current status
+Basic implementation of `cat` without flags.

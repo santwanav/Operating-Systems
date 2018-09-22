@@ -5,8 +5,7 @@
 #include<sys/stat.h>
 #include<fcntl.h>
 #include<unistd.h>
-#define handle_error(msg) \
-	do { perror(msg); exit(EXIT_FAILURE); } while (0)
+#include"header.h"
 
 void print_file(char* file);
 int main(int argc, char *argv[]) {

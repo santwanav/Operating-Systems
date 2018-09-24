@@ -51,11 +51,12 @@ void print_file(char *file, struct arguments *args) {
 	if (page == MAP_FAILED) handle_error("mmap");
 	close(fd);
 	for (int i = 0; i < sb.st_size; i++){
-		if (page[i] == '\n'){
-			if ((page[i-1] != '\n') && (args -> show_ends == 1))
-				printf("%c", '$');
+		if ((page[i] == '\n') && (args -> show_ends == 1)) {
+			printf("%c", '$');
 			printf("%c", page[i]);
 		}
+		else if ((page[i] == '\t') && (args -> show_tabs))
+			printf("%s", "^I" );
 		else
 			printf("%c", page[i]);
 	}

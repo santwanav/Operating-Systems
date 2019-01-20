@@ -11,6 +11,7 @@ struct arguments {
 	char **files;
 };
 
+int line_num = 0;
 static const char* optString = "bEnstTv";
 void print_file(char *file, struct arguments *args);
 void get_arguments(int num, char *input[], struct arguments *args);
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]) {
 	args->num_of_files = 0;
 	args->files = NULL;
 
-/* Handle error if no file specified */
+	/* Handle error if no file specified */
 	check_valid(argc);
 
 /* Perform command line arguments parsing */
@@ -50,11 +51,53 @@ void print_file(char *file, struct arguments *args) {
 	char *page = mmap(NULL, sb.st_size, PROT_READ, MAP_SHARED, fd, 0);
 	if (page == MAP_FAILED) handle_error("mmap");
 	close(fd);
+	int eof = 1;
+	int empty_line = 0;
 	for (int i = 0; i < sb.st_size; i++){
-		if ((page[i] == '\n') && (args -> show_ends == 1)) {
-			printf("%c", '$');
-			printf("%c", page[i]);
+		/* Check for all flags which depend on new line */
+		if (page[i] == '\n'){
+			if (args -> squeeze_blank == 1){
+
+			}
+			else {
+				if (args -> number_all == 1) //TODO
+				else if (args -> number_noblank == 1) //TODO
+				else //TODO
+			}
 		}
+		if (i == 0 && page[i] == '\n') {
+			if (args -> show_ends == 1)
+				printf("%c\n", '$');
+			if (args -> squeeze_blank == 1){
+				int count = 1;
+				while (page[i + count] == '\n')
+					count++;
+				i = i + count - 1;
+			}
+		}
+		else if ((page[i] == '\n') && (page[i-1] != '\n')){
+			if (args -> show_ends == 1)
+				printf("%c\n", '$');
+			if (page[i+1] == '\n'){
+				printf("%c\n", '$');
+				i++;
+				if (args -> squeeze_blank == 1) {
+					int count = 1;
+					while (page[i + count] == '\n')
+						count++;
+					i = i + count - 1;
+				}
+				else {
+					int count = 1;
+					while (page[i + count] == '\n') {
+						printf("%c\n", '$');
+						count++;
+					}
+					i = i + count - 1;
+				}
+			}
+		}
+		/* Check for all flags which depend on tab character */
 		else if ((page[i] == '\t') && (args -> show_tabs))
 			printf("%s", "^I" );
 		else
